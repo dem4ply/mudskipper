@@ -15,7 +15,7 @@ setup(
    license='',
    author='',
    author_email='',
-   packages=find_packages(),
+   packages=[ 'mudskipper' ],
    install_requires=[ 'requests<=2.19.1', ],
    dependency_links=[],
    classifiers=[
