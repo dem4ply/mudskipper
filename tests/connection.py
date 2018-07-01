@@ -1,5 +1,6 @@
 from unittest import TestCase
 from mudskipper.connection import Connections
+from mudskipper.endpoint import Endpoint
 
 
 class Test_connection( TestCase ):
@@ -57,3 +58,14 @@ class Test_build_endpoint( Test_connection ):
         endpoint = self.connections.build_endpoint( url='a/threads.json' )
         self.assertEqual(
             endpoint.assigned_url, 'http://a.4cdn.org/w/a/threads.json' )
+
+    def test_new_endpoint_class_default_should_be_base_endpoint( self ):
+        endpoint = self.connections.build_endpoint( url='a/threads.json' )
+        self.assertIsInstance( endpoint, Endpoint )
+
+    def test_new_endpoint_should_return_the_correct_class( self ):
+        class Endpoint_test( Endpoint ):
+            pass
+        endpoint = self.connections.build_endpoint(
+            url='a/threads.json', endpoint_class=Endpoint_test )
+        self.assertIsInstance( endpoint, Endpoint_test )

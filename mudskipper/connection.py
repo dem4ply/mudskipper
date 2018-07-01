@@ -56,7 +56,7 @@ class Connections:
             raise KeyError(
                 "there is no connection with name {}".format( alias ) )
 
-    def build_endpoint( self, alias='default', url=None ):
+    def build_endpoint( self, alias='default', url=None, endpoint_class=None ):
         """
         build a endpoint
 
@@ -74,11 +74,9 @@ class Connections:
             url = connection[ 'host' ]
         else:
             url = urljoin( connection[ 'host' ], url )
-        endpoint_class = self.get_class_endpoint()
+        if endpoint_class is None:
+            endpoint_class = Endpoint
         return endpoint_class( url, proxy=connection.get( 'proxy' ) )
-
-    def get_class_endpoint( self ):
-        return Endpoint
 
     def __getitem__( self, name ):
         return self.get( name )
