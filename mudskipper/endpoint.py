@@ -33,11 +33,13 @@ class Response:
 class Endpoint():
     url = None
 
-    def __init__( self, url=None, **kw ):
+    def __init__( self, url=None, proxy=None, **kw ):
         if url is None:
             self._url = self.url
         else:
             self._url = url
+
+        self.proxy = proxy
         self.parameters = kw
 
     @property
@@ -58,20 +60,20 @@ class Endpoint():
         return self._url.format( **self.parameters )
 
     def format( self, **kw ):
-        return self.__class__( self.assigned_url, **kw )
+        return self.__class__( self.assigned_url, proxy=self.proxy, **kw )
 
     def __copy__( self ):
         return self.__class__( **vars( self ) )
 
     def __dict__( self ):
-        result = { 'url': self._url }
+        result = { 'url': self._url, 'proxy': self.proxy }
         result.update( self.parameters )
         return result
 
 
 class GET:
     def get( self ):
-        response = requests.get( self.format_url )
+        response = requests.get( self.format_url, proxies=self.proxy )
         return self.build_response( response )
 
 
@@ -79,7 +81,9 @@ class POST:
     def generate_post_headers( self ):
         return None
 
-    def post( self, body ):
+    def post( self, body=None ):
         headers = self.generate_post_headers()
-        response = requests.post( self.format_url, data=body, headers=headers )
+        response = requests.post(
+            self.format_url, data=body, headers=headers,
+            proxies=self.proxy )
         return self.build_response( response )

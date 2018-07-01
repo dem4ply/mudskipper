@@ -1,3 +1,7 @@
+from urllib.parse import urljoin
+from mudskipper.endpoint import Endpoint
+
+
 class Connections:
     def __init__( self ):
         self._kwargs = {}
@@ -51,6 +55,30 @@ class Connections:
         except KeyError:
             raise KeyError(
                 "there is no connection with name {}".format( alias ) )
+
+    def build_endpoint( self, alias='default', url=None ):
+        """
+        build a endpoint
+
+        Parameters
+        ==========
+        url: str
+            string is going to be joined to the host url
+
+        Returns
+        =======
+        py:class`mudskipper.endpoint.Endpoint`
+        """
+        connection = self[ alias ]
+        if url is None:
+            url = connection[ 'host' ]
+        else:
+            url = urljoin( connection[ 'host' ], url )
+        endpoint_class = self.get_class_endpoint()
+        return endpoint_class( url, proxy=connection.get( 'proxy' ) )
+
+    def get_class_endpoint( self ):
+        return Endpoint
 
     def __getitem__( self, name ):
         return self.get( name )

@@ -1,10 +1,11 @@
 import json
 from unittest import TestCase
+from unittest.mock import patch, ANY
 from mudskipper import Endpoint
-from mudskipper.endpoint import GET
+from mudskipper.endpoint import GET, POST
 
 
-class Endpoint_test( Endpoint, GET ):
+class Endpoint_test( Endpoint, GET, POST ):
     url = 'http://a.4cdn.org/{board}/threads.json'
 
 
@@ -17,6 +18,13 @@ class Test_endpoint_4chan_thread( TestCase ):
     def setUp( self ):
         self.endpoint = Endpoint_test(
             'http://a.4cdn.org/{board}/threads.json' )
+
+
+class Test_endpoint_4chan_thread_with_proxy( TestCase ):
+    def setUp( self ):
+        self.endpoint = Endpoint_test(
+            'http://a.4cdn.org/w/threads.json',
+            proxy={ 'http': 'some_proxie' } )
 
 
 class Test_endpoint_class( TestCase ):
@@ -32,6 +40,19 @@ class Test_get( Test_endpoint_4chan_wallpaper_board ):
         self.assertIsInstance( response.body, str )
         self.assertIsInstance( response.native, list )
         self.assertListEqual( json.loads( response.body ), response.native )
+
+
+class Test_proxy( Test_endpoint_4chan_thread_with_proxy ):
+    @patch( 'requests.get' )
+    def test_request_should_use_proxie_in_requests_get( self, requests_get ):
+        self.endpoint.get()
+        requests_get.assert_called_with( ANY, proxies=self.endpoint.proxy )
+
+    @patch( 'requests.post' )
+    def test_request_should_use_proxie_in_requests_post( self, requests_post ):
+        self.endpoint.post()
+        requests_post.assert_called_with(
+            ANY, proxies=self.endpoint.proxy, data=None, headers=None )
 
 
 class Test_init:
