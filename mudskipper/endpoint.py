@@ -1,5 +1,4 @@
 import requests
-import copy
 
 
 class Response:
@@ -74,6 +73,7 @@ class GET:
     def get( self ):
         response = requests.get( self.format_url )
         return self.build_response( response )
+
 
 class POST:
     def generate_post_headers( self ):

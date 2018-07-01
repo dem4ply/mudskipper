@@ -15,7 +15,8 @@ class Test_endpoint_4chan_wallpaper_board( TestCase ):
 
 class Test_endpoint_4chan_thread( TestCase ):
     def setUp( self ):
-        self.endpoint = Endpoint_test( 'http://a.4cdn.org/{board}/threads.json' )
+        self.endpoint = Endpoint_test(
+            'http://a.4cdn.org/{board}/threads.json' )
 
 
 class Test_endpoint_class( TestCase ):

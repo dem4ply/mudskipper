@@ -2,7 +2,7 @@ ignore_test = test/**,venv/*,setup.py
 
 test:: test_unit report
 
-modules = chibi
+modules = tests mudskipper
 
 style_test: flakes pep8
 
