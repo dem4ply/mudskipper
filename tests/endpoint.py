@@ -54,6 +54,17 @@ class Test_proxy( Test_endpoint_4chan_thread_with_proxy ):
         requests_post.assert_called_with(
             ANY, proxies=self.endpoint.proxy, data=None, headers=None )
 
+    def test_assing_a_proxy_is_no_a_dict_should_raise_typeerror( self ):
+        with self.assertRaises( TypeError ):
+            self.endpoint.proxy = "some_proxy"
+
+    def test_when_the_dict_have_values_with_None_or_false_should_return_None(
+            self ):
+        self.endpoint.proxy = { "None": None }
+        self.assertIsNone( self.endpoint.proxy )
+        self.endpoint.proxy = { "false": False }
+        self.assertIsNone( self.endpoint.proxy )
+
 
 class Test_init:
     def test_the_url_in_the_insntace_should_no_be_none( self ):
