@@ -1,4 +1,6 @@
 from urllib.parse import urljoin
+from zeep import Client, Transport
+from zeep.cache import SqliteCache
 from mudskipper.endpoint import Endpoint
 
 
@@ -77,6 +79,19 @@ class Connections:
         if endpoint_class is None:
             endpoint_class = Endpoint
         return endpoint_class( url, proxy=connection.get( 'proxy' ) )
+
+    def build_zeep_client(self, alias='default'):
+        connection = self[alias]
+        wsdl = connection['wsdl']
+        proxies = connection.get('proxies', None)
+
+        transport = Transport(cache=SqliteCache())
+        client = Client(wsdl, transport=transport)
+
+        if proxies:
+            client.transport.session.proxies = proxies
+
+        return client
 
     def __getitem__( self, name ):
         return self.get( name )
