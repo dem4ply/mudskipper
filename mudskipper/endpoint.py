@@ -43,6 +43,24 @@ class Endpoint():
         self.parameters = kw
 
     @property
+    def proxy( self ):
+        if self._proxy is None:
+            return None
+        if any( v for v in self._proxy.values() ):
+            return self._proxy
+        else:
+            return None
+
+    @proxy.setter
+    def proxy( self, value ):
+        if value is None:
+            self._proxy = None
+        elif not isinstance( value, dict ):
+            raise TypeError()
+        else:
+            self._proxy = value
+
+    @property
     def assigned_url( self ):
         if self._url is not None:
             return self._url
