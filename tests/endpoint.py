@@ -82,6 +82,11 @@ class Test_format:
             new_endpoint.format_url, 'http://a.4cdn.org/w/threads.json' )
 
 
+class Test_utf_8( Test_endpoint_4chan_thread, Test_format, Test_init ):
+    def test_should_work( self ):
+        self.endpoint.format( board='w' ).post( body='’' )
+
+
 class Test_instance( Test_endpoint_4chan_thread, Test_format, Test_init ):
     pass
 

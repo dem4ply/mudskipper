@@ -100,6 +100,8 @@ class POST:
         return None
 
     def post( self, body=None ):
+        if isinstance( body, str ):
+            body = body.encode( 'UTF-8' )
         headers = self.generate_post_headers()
         response = requests.post(
             self.format_url, data=body, headers=headers,
