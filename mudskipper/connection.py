@@ -1,6 +1,5 @@
 from urllib.parse import urljoin
-from zeep import Client, Transport
-from zeep.cache import SqliteCache
+from zeep import Client
 from mudskipper.endpoint import Endpoint
 
 
