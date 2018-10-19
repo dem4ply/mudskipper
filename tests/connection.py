@@ -76,7 +76,8 @@ class Test_build_zeep_client( Test_connection ):
     def setUp( self ):
         super().setUp()
         self.default_settings = {
-            'wsdl': 'http://webservices.amazon.com/AWSECommerceService/AWSECommerceService.wsdl',
+            'wsdl': 'http://webservices.amazon.com/'
+                    'AWSECommerceService/AWSECommerceService.wsdl',
             'proxies': { 'http': 'some_proxy' } }
         self.connections.configure( default=self.default_settings )
 
@@ -84,9 +85,12 @@ class Test_build_zeep_client( Test_connection ):
         client = self.connections.build_zeep_client()
         self.assertEqual(
             client.wsdl.location,
-            'http://webservices.amazon.com/AWSECommerceService/AWSECommerceService.wsdl'
+            'http://webservices.amazon.com/'
+            'AWSECommerceService/AWSECommerceService.wsdl'
         )
 
     def test_client_has_proxy( self ):
         client = self.connections.build_zeep_client()
-        self.assertEqual( client.transport.session.proxies, { 'http': 'some_proxy' } )
+        self.assertEqual(
+            client.transport.session.proxies, { 'http': 'some_proxy' }
+        )
