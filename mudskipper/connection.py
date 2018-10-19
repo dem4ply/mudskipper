@@ -81,12 +81,11 @@ class Connections:
         return endpoint_class( url, proxy=connection.get( 'proxy' ) )
 
     def build_zeep_client(self, alias='default'):
+
         connection = self[alias]
         wsdl = connection['wsdl']
         proxies = connection.get('proxies', None)
-
-        transport = Transport(cache=SqliteCache())
-        client = Client(wsdl, transport=transport)
+        client = Client(wsdl)
 
         if proxies:
             client.transport.session.proxies = proxies
