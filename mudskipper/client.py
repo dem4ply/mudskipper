@@ -3,7 +3,7 @@ from .connection import (
 )
 
 
-class Client:
+class Client_base:
     """
     base client for apis
 
@@ -52,11 +52,14 @@ class Client:
         return Connections()
 
 
-class Client_http( Client ):
+class Client_http( Client_base ):
     def build_connection( self ):
         return Connections_http()
 
 
-class Client_soap( Client ):
+class Client_soap( Client_base ):
     def build_connection( self ):
         return Connections_soap()
+
+
+Client = Client_http
