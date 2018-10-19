@@ -4,6 +4,9 @@ from zeep.cache import SqliteCache
 from mudskipper.endpoint import Endpoint
 
 
+__all__ = [ 'Connections_http', 'Connections_soap' ]
+
+
 class Connections_base:
     def __init__( self ):
         self._kwargs = {}
@@ -101,3 +104,6 @@ class Connections_soap( Connections_base ):
             client.transport.session.proxies = proxies
 
         return client
+
+
+Connections = Connections_http
