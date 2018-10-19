@@ -1,5 +1,5 @@
 from unittest import TestCase
-from mudskipper.connection import Connections
+from mudskipper.connection import Connections_http as Connections
 from mudskipper.endpoint import Endpoint
 
 

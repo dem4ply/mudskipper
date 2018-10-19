@@ -1,7 +1,9 @@
-from .connection import Connections
+from .connection import (
+    Connections_base as Connections, Connections_http, Connections_soap
+)
 
 
-class Client:
+class Client_base:
     """
     base client for apis
 
@@ -48,3 +50,16 @@ class Client:
         build the class for manage connections
         """
         return Connections()
+
+
+class Client_http( Client_base ):
+    def build_connection( self ):
+        return Connections_http()
+
+
+class Client_soap( Client_base ):
+    def build_connection( self ):
+        return Connections_soap()
+
+
+Client = Client_http
