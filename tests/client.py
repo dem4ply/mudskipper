@@ -1,6 +1,6 @@
 from unittest import TestCase
-from mudskipper import Client
-from mudskipper.connection import Connections
+from mudskipper import Client_http as Client
+from mudskipper.connection import Connections_http as Connections
 
 
 class Custom_connection( Connections ):

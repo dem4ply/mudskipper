@@ -4,7 +4,7 @@ from zeep.cache import SqliteCache
 from mudskipper.endpoint import Endpoint
 
 
-class Connections:
+class Connections_base:
     def __init__( self ):
         self._kwargs = {}
         self._connections = {}
@@ -58,6 +58,14 @@ class Connections:
             raise KeyError(
                 "there is no connection with name {}".format( alias ) )
 
+    def __getitem__( self, name ):
+        return self.get( name )
+
+    def __setitem__( self, name ):
+        return self.add( name )
+
+
+class Connections_http( Connections_base ):
     def build_endpoint( self, alias='default', url=None, endpoint_class=None ):
         """
         build a endpoint
@@ -80,6 +88,8 @@ class Connections:
             endpoint_class = Endpoint
         return endpoint_class( url, proxy=connection.get( 'proxy' ) )
 
+
+class Connections_soap( Connections_base ):
     def build_zeep_client(self, alias='default'):
         connection = self[alias]
         wsdl = connection['wsdl']
@@ -92,9 +102,3 @@ class Connections:
             client.transport.session.proxies = proxies
 
         return client
-
-    def __getitem__( self, name ):
-        return self.get( name )
-
-    def __setitem__( self, name ):
-        return self.add( name )
