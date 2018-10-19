@@ -1,6 +1,6 @@
 from unittest import TestCase
+
 from mudskipper.connection import Connections_soap
-from mudskipper.endpoint import Endpoint
 
 
 class Test_connection( TestCase ):
