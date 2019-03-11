@@ -1,4 +1,5 @@
 import requests
+from urllib import parse
 
 
 class Response:
@@ -33,11 +34,16 @@ class Response:
 class Endpoint():
     url = None
 
-    def __init__( self, url=None, proxy=None, **kw ):
+    def __init__( self, url=None, proxy=None, host=None, **kw ):
         if url is None:
             self._url = self.url
         else:
             self._url = url
+
+        if host is None:
+            self._host = None
+        else:
+            self._host = host
 
         self.proxy = proxy
         self.parameters = kw
@@ -75,16 +81,23 @@ class Endpoint():
         return Response( response )
 
     def _url_format( self ):
-        return self._url.format( **self.parameters )
+        result = self._url.format( **self.parameters )
+        if self._host:
+            p = parse.urlparse( result )
+            p = p._replace( netloc=self._host )
+            result = parse.urlunparse( p )
+        return result
 
     def format( self, **kw ):
-        return self.__class__( self.assigned_url, proxy=self.proxy, **kw )
+        return self.__class__(
+            self.assigned_url, proxy=self.proxy, host=self._host, **kw )
 
     def __copy__( self ):
         return self.__class__( **vars( self ) )
 
     def __dict__( self ):
-        result = { 'url': self._url, 'proxy': self.proxy }
+        result = {
+            'url': self._url, 'proxy': self.proxy, 'host': self._host }
         result.update( self.parameters )
         return result
 
