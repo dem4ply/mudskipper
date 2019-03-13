@@ -26,6 +26,13 @@ class Test_endpoint_4chan_thread_with_host( TestCase ):
             'http://a.4cdn.org/{board}/threads.json', host='other_host' )
 
 
+class Test_endpoint_4chan_thread_headers( TestCase ):
+    def setUp( self ):
+        self.endpoint = Endpoint_test(
+            'http://a.4cdn.org/{board}/threads.json',
+            headers={ 'Content-type': 'application/json' } )
+
+
 class Test_endpoint_4chan_thread_with_proxy( TestCase ):
     def setUp( self ):
         self.endpoint = Endpoint_test(
@@ -102,6 +109,17 @@ class Test_instance(
         new_endpoint = self.endpoint.format( board='w' )
         self.assertEqual(
             new_endpoint.format_url, 'http://other_host/w/threads.json' )
+
+class Test_headers(
+    Test_endpoint_4chan_thread_headers, Test_init ):
+
+    def test_should_create_another_instance_of_endpoint( self ):
+        new_endpoint = self.endpoint.format( board='w' )
+        self.assertIsNot( new_endpoint, self.endpoint )
+
+    def test_the_new_instance_should_have_the_same_headers( self ):
+        new_endpoint = self.endpoint.format( board='w' )
+        self.assertEqual( new_endpoint._headers, self.endpoint._headers )
 
 
 class Test_format_class( Test_endpoint_class, Test_format, Test_init ):

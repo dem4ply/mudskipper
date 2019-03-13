@@ -34,7 +34,7 @@ class Response:
 class Endpoint():
     url = None
 
-    def __init__( self, url=None, proxy=None, host=None, **kw ):
+    def __init__( self, url=None, proxy=None, host=None, headers=None, **kw ):
         if url is None:
             self._url = self.url
         else:
@@ -44,6 +44,11 @@ class Endpoint():
             self._host = None
         else:
             self._host = host
+
+        if headers is None:
+            self._headers = None
+        else:
+            self._headers = headers
 
         self.proxy = proxy
         self.parameters = kw
@@ -90,21 +95,24 @@ class Endpoint():
 
     def format( self, **kw ):
         return self.__class__(
-            self.assigned_url, proxy=self.proxy, host=self._host, **kw )
+            self.assigned_url, proxy=self.proxy, host=self._host,
+            headers=self._headers, **kw )
 
     def __copy__( self ):
         return self.__class__( **vars( self ) )
 
     def __dict__( self ):
         result = {
-            'url': self._url, 'proxy': self.proxy, 'host': self._host }
+            'url': self._url, 'proxy': self.proxy, 'host': self._host,
+            'headers': self._headers }
         result.update( self.parameters )
         return result
 
 
 class GET:
     def get( self ):
-        response = requests.get( self.format_url, proxies=self.proxy )
+        response = requests.get(
+            self.format_url, proxies=self.proxy, headers=self._headers )
         return self.build_response( response )
 
 
