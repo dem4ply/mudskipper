@@ -20,6 +20,19 @@ class Test_endpoint_4chan_thread( TestCase ):
             'http://a.4cdn.org/{board}/threads.json' )
 
 
+class Test_endpoint_4chan_thread_with_host( TestCase ):
+    def setUp( self ):
+        self.endpoint = Endpoint_test(
+            'http://a.4cdn.org/{board}/threads.json', host='other_host' )
+
+
+class Test_endpoint_4chan_thread_headers( TestCase ):
+    def setUp( self ):
+        self.endpoint = Endpoint_test(
+            'http://a.4cdn.org/{board}/threads.json',
+            headers={ 'Content-type': 'application/json' } )
+
+
 class Test_endpoint_4chan_thread_with_proxy( TestCase ):
     def setUp( self ):
         self.endpoint = Endpoint_test(
@@ -46,7 +59,8 @@ class Test_proxy( Test_endpoint_4chan_thread_with_proxy ):
     @patch( 'requests.get' )
     def test_request_should_use_proxie_in_requests_get( self, requests_get ):
         self.endpoint.get()
-        requests_get.assert_called_with( ANY, proxies=self.endpoint.proxy )
+        requests_get.assert_called_with(
+            ANY, proxies=self.endpoint.proxy, headers=None, params={} )
 
     @patch( 'requests.post' )
     def test_request_should_use_proxie_in_requests_post( self, requests_post ):
@@ -84,6 +98,30 @@ class Test_format:
 
 class Test_instance( Test_endpoint_4chan_thread, Test_format, Test_init ):
     pass
+
+
+class Test_hosts(
+        Test_endpoint_4chan_thread_with_host, Test_init ):
+    def test_should_create_another_instance_of_endpoint( self ):
+        new_endpoint = self.endpoint.format( board='w' )
+        self.assertIsNot( new_endpoint, self.endpoint )
+
+    def test_should_change_the_url( self ):
+        new_endpoint = self.endpoint.format( board='w' )
+        self.assertEqual(
+            new_endpoint.format_url, 'http://other_host/w/threads.json' )
+
+
+class Test_headers(
+        Test_endpoint_4chan_thread_headers, Test_init ):
+
+    def test_should_create_another_instance_of_endpoint( self ):
+        new_endpoint = self.endpoint.format( board='w' )
+        self.assertIsNot( new_endpoint, self.endpoint )
+
+    def test_the_new_instance_should_have_the_same_headers( self ):
+        new_endpoint = self.endpoint.format( board='w' )
+        self.assertEqual( new_endpoint._headers, self.endpoint._headers )
 
 
 class Test_format_class( Test_endpoint_class, Test_format, Test_init ):
