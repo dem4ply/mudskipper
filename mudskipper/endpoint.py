@@ -139,7 +139,10 @@ class POST:
     @property
     def is_json( self ):
         headers = self.generate_post_headers()
-        return headers.get( 'Content-Type', None ) == 'application/json'
+        if headers:
+            return headers.get( 'Content-Type', None ) == 'application/json'
+        else:
+            return False
 
     def post( self, body=None ):
         headers = self.generate_post_headers()

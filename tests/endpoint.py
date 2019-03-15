@@ -59,7 +59,8 @@ class Test_proxy( Test_endpoint_4chan_thread_with_proxy ):
     @patch( 'requests.get' )
     def test_request_should_use_proxie_in_requests_get( self, requests_get ):
         self.endpoint.get()
-        requests_get.assert_called_with( ANY, proxies=self.endpoint.proxy )
+        requests_get.assert_called_with(
+            ANY, proxies=self.endpoint.proxy, headers=None, params={} )
 
     @patch( 'requests.post' )
     def test_request_should_use_proxie_in_requests_post( self, requests_post ):
