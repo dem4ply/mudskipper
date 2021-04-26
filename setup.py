@@ -17,7 +17,7 @@ setup(
     author_email='',
     packages=[ 'mudskipper' ],
     install_requires=[
-        'requests<=2.19.1', 'zeep>=2.4.0',
+        'requests>=2.19.1', 'zeep>=2.4.0',
         'xmltodict>=0.10.0' ],
     dependency_links=[],
     classifiers=[
