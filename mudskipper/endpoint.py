@@ -145,6 +145,8 @@ class POST:
             return False
 
     def post( self, body=None ):
+        if isinstance( body, str ):
+            body = body.encode( 'UTF-8' )
         headers = self.generate_post_headers()
         if self.is_json:
             response = requests.post(
